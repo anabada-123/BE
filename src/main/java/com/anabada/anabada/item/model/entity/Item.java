@@ -6,10 +6,12 @@ import com.anabada.anabada.item.model.type.ItemStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Getter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,6 +48,4 @@ public class Item extends Auditing {
     @Column
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     private List<String> imgList;
-
-
 }
