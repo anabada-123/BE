@@ -1,5 +1,6 @@
 package com.anabada.anabada.item.model.entity;
 
+import com.anabada.anabada.global.model.entity.Auditing;
 import com.anabada.anabada.item.model.type.ItemCate;
 import com.anabada.anabada.item.model.type.ItemStatus;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Item {
+public class Item extends Auditing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
