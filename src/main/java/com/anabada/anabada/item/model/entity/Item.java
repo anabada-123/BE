@@ -51,4 +51,31 @@ public class Item extends Auditing {
     @Column
     @ElementCollection(targetClass = String.class, fetch = FetchType.LAZY)
     private List<String> imgList;
+
+    public void updateMainImg(String img){
+        this.img = img;
+    }
+
+    public void updateImges(List<String> imgList){
+        this.imgList = imgList;
+    }
+
+    public void updateItemAll(
+            String itemName,
+            String itemContent,
+            String itemOneContent,
+            String tradingPosition,
+            String tradingItem,
+            ItemCate cate,
+            ItemStatus status
+            ) {
+        this.itemName = itemName;
+        this.itemContent = itemContent;
+        this.itemOneContent = itemOneContent;
+        this.tradingPosition = tradingPosition;
+        this.tradingItem = tradingItem;
+        this.cate = cate;
+        this.status = status;
+    }
+
 }

@@ -25,12 +25,9 @@ public class GlobalRestControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> vaildationHandler(MethodArgumentNotValidException e){
-        Map<String, String > map = new HashMap<>();
-        map.put("errorMsg","잘못된 값이 있습니다.");
-        map.put("error",e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(map);
+                .body(e.getBody());
     }
 
 

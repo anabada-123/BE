@@ -1,5 +1,6 @@
 package com.anabada.anabada.item.controller;
 
+import com.anabada.anabada.item.model.request.ItemUpdateRequest;
 import com.anabada.anabada.item.model.response.ItemFindResponse;
 import com.anabada.anabada.item.service.ItemService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,20 +25,31 @@ public class ItemController {
 
 
     //상품 전체 조회
-    @GetMapping("/")
-    public List<ItemFindResponse> getItem() {
-        return itemService.getItem();
+    @GetMapping
+    public ResponseJson<List<ItemFindResponse>> getItem() {
+        return ResponseJson.success(itemService.getItem());
     }
 
     //TODO: 로그인 기능 추가시 아이디 넣어야함.
     @PostMapping
     public ResponseJson<String> itemSave(
-            @RequestPart(value = "item") @Valid ItemCreateRequest request,
-            @RequestPart(value = "mainImg") MultipartFile file,
-            @RequestPart(value = "img") List<MultipartFile> files
+            @RequestPart(value = "item", required = false) @Valid ItemCreateRequest request,
+            @RequestPart(value = "mainImg", required = false) MultipartFile file,
+            @RequestPart(value = "img", required = false) List<MultipartFile> files
     ) {
         itemService.itemSave(files, file, request);
         return ResponseJson.success("저장 성공!");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseJson<String> itemUpdate(
+            @RequestPart(value = "item", required = false) @Valid ItemUpdateRequest request,
+            @RequestPart(value = "mainImg", required = false) MultipartFile file,
+            @RequestPart(value = "img", required = false) List<MultipartFile> files,
+            @PathVariable("id") Long itemId
+    ) {
+        itemService.itemUpdate(itemId,files, file, request);
+        return ResponseJson.success("수정 성공!");
     }
 
 }
