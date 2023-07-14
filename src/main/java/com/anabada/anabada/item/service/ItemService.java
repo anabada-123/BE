@@ -1,13 +1,12 @@
 package com.anabada.anabada.item.service;
 
 import com.anabada.anabada.item.repository.ItemRepository;
-import com.anabada.anabada.item.response.ItemFindResponse;
+import com.anabada.anabada.item.model.response.ItemFindResponse;
 import com.anabada.anabada.global.util.FileUtil;
 import com.anabada.anabada.item.model.entity.Item;
 import com.anabada.anabada.item.model.request.ItemCreateRequest;
 import com.anabada.anabada.item.model.type.ItemCate;
 import com.anabada.anabada.item.model.type.ItemStatus;
-import com.anabada.anabada.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

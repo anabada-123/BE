@@ -1,4 +1,4 @@
-package com.anabada.anabada.item.response;
+package com.anabada.anabada.item.model.response;
 
 import com.anabada.anabada.item.model.entity.Item;
 import com.anabada.anabada.item.model.type.ItemCate;
