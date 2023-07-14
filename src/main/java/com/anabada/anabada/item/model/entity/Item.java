@@ -29,6 +29,9 @@ public class Item extends Auditing {
     private String itemContent;
 
     @Column
+    private String itemOneContent;
+
+    @Column
     private String tradingPosition;
 
     @Column
@@ -46,6 +49,6 @@ public class Item extends Auditing {
     private String img;
 
     @Column
-    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = String.class, fetch = FetchType.LAZY)
     private List<String> imgList;
 }
