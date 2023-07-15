@@ -29,6 +29,4 @@ public class GlobalRestControllerAdvice {
                 .status(HttpStatus.NOT_FOUND)
                 .body(e.getBody());
     }
-
-
 }
