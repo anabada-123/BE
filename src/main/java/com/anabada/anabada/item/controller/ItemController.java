@@ -4,8 +4,6 @@ import com.anabada.anabada.item.model.request.ItemUpdateRequest;
 import com.anabada.anabada.item.model.response.ItemFindResponse;
 import com.anabada.anabada.item.model.response.PageResponseDto;
 import com.anabada.anabada.item.service.ItemService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +45,7 @@ public class ItemController {
     }
 
     //TODO: 로그인 기능 추가시 아이디 넣어야함.
-    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data"})
     public ResponseJson<String> itemSave(
             @RequestPart(value = "item", required = false) @Valid ItemCreateRequest request,
             @RequestPart(value = "mainImg", required = false) MultipartFile file,
@@ -64,7 +62,7 @@ public class ItemController {
             @RequestPart(value = "img", required = false) List<MultipartFile> files,
             @PathVariable("id") Long itemId
     ) {
-        itemService.itemUpdate(itemId,files, file, request);
+        itemService.itemUpdate(itemId, files, file, request);
         return ResponseJson.success("수정 성공!");
     }
 }

@@ -22,4 +22,5 @@ public abstract class Auditing {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
+
 }

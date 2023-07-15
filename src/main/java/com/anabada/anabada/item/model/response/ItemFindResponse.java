@@ -30,6 +30,4 @@ public class ItemFindResponse {
         this.day = item.getCreatedAt();
     }
 
-
-
 }
