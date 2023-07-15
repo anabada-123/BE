@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -40,11 +41,14 @@ public class ItemService {
     @Transactional(readOnly = true)
     public PageResponseDto getItem(int page, int size) {
         Sort.Direction direction = Sort.Direction.DESC;
-        Sort sort = Sort.by(direction,"modifiedAt");
+        Sort sort = Sort.by(direction, "modifiedAt");
+
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Item> itemPage = itemRepository.findAll(pageable);
-        List<ItemFindResponse> itemFindResponses = itemPage.getContent().stream().map(ItemFindResponse::new).toList();
+        List<ItemFindResponse> itemFindResponses = itemPage.getContent().stream()
+                .map(ItemFindResponse::new)
+                .toList();
 
         return new PageResponseDto(itemPage.getTotalPages(), itemFindResponses);
     }
@@ -53,7 +57,7 @@ public class ItemService {
     @Transactional(readOnly = true)
     public ItemFindResponse getItem(Long id) {
         Item item = itemRepository.findById(id).orElseThrow(
-                ()-> new ItemException(ItemErrorCode.ITEM_NULL));
+                () -> new ItemException(ItemErrorCode.ITEM_NULL));
 
         ItemFindResponse itemFindResponse = new ItemFindResponse(item);
         return itemFindResponse;
@@ -62,7 +66,7 @@ public class ItemService {
     //게시글 삭제
     public Long deleteItem(Long id) {
         Item item = itemRepository.findById(id).orElseThrow(
-                ()-> new ItemException(ItemErrorCode.ITEM_NULL));
+                () -> new ItemException(ItemErrorCode.ITEM_NULL));
 
         itemRepository.delete(item);
         return id;
@@ -128,9 +132,10 @@ public class ItemService {
             String url = s3Utill.saveFile(file, fileName);
             System.out.println(url);
 
-            images.add(fileName);
+            images.add(fileName+getExtension(file));
         }
-        String img = name + System.nanoTime();
+
+        String img = name + System.nanoTime()+getExtension(mainImg);
         s3Utill.saveFile(mainImg, img);
 
         itemRepository.save(
@@ -164,4 +169,18 @@ public class ItemService {
             default -> throw new ItemException(ItemErrorCode.ITEM_STATUS_ERROR);
         };
     }
+
+    private String getExtension(MultipartFile file){
+        String contextType = file.getContentType();
+        String extension = null;
+        if(StringUtils.hasText(contextType)){
+            if(contextType.contains("image/jpeg")){
+                extension = ".jpg";
+            }else if(contextType.contains("image/png")){
+                extension = ".png";
+            }
+        }
+        return extension;
+    }
+
 }

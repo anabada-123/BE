@@ -7,7 +7,6 @@ import com.anabada.anabada.item.service.ItemService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.anabada.anabada.global.model.response.ResponseJson;
 import com.anabada.anabada.item.model.request.ItemCreateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +28,10 @@ public class ItemController {
     public PageResponseDto getItem(
             @RequestParam("page") int page)
     {
+               //100개 -> 10개
         return itemService.getItem(page-1, 10);
-    }
+    }          //1 2 3 4 5 -> 몇번째 페이지까지 있는지.
+
 
     //선택한 상품 조회
     @GetMapping("/{id}")
@@ -38,31 +39,35 @@ public class ItemController {
         return itemService.getItem(id);
     }
 
+
     //게시글 삭제
     @DeleteMapping("{id}")
     public Long deleteItem(@PathVariable Long id){
         return itemService.deleteItem(id);
     }
 
+
     //TODO: 로그인 기능 추가시 아이디 넣어야함.
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseJson<String> itemSave(
+    public String itemSave(
             @RequestPart(value = "item", required = false) @Valid ItemCreateRequest request,
             @RequestPart(value = "mainImg", required = false) MultipartFile file,
             @RequestPart(value = "img", required = false) List<MultipartFile> files
     ) {
         itemService.itemSave(files, file, request);
-        return ResponseJson.success("저장 성공!");
+        return "저장 성공!";
     }
 
+
     @PutMapping("/{id}")
-    public ResponseJson<String> itemUpdate(
+    public String itemUpdate(
             @RequestPart(value = "item", required = false) @Valid ItemUpdateRequest request,
             @RequestPart(value = "mainImg", required = false) MultipartFile file,
             @RequestPart(value = "img", required = false) List<MultipartFile> files,
             @PathVariable("id") Long itemId
     ) {
         itemService.itemUpdate(itemId, files, file, request);
-        return ResponseJson.success("수정 성공!");
+        return "수정 성공!";
     }
+
 }
