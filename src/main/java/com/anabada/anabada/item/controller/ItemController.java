@@ -3,7 +3,6 @@ package com.anabada.anabada.item.controller;
 import com.anabada.anabada.item.model.request.ItemUpdateRequest;
 import com.anabada.anabada.item.model.response.ItemFindResponse;
 import com.anabada.anabada.item.service.ItemService;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,16 +17,30 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/item")
+@RequestMapping("/api/items")
 @RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
 
-    //상품 전체 조회
-    @GetMapping
-    public List<ItemFindResponse> getItem() {
-        return itemService.getItem();
+    //상품 조회
+    @GetMapping("/")
+    public List<ItemFindResponse> getItem(
+            @RequestParam("page") int page)
+    {
+        return itemService.getItem(page-1, 10);
+    }
+
+    //선택한 상품 조회
+    @GetMapping("/{id}")
+    public ItemFindResponse getItem(@PathVariable Long id){
+        return itemService.getItem(id);
+    }
+
+    //게시글 삭제
+    @DeleteMapping("{id}")
+    public Long deleteItem(@PathVariable Long id){
+        return itemService.deleteItem(id);
     }
 
     //TODO: 로그인 기능 추가시 아이디 넣어야함.
@@ -51,5 +64,4 @@ public class ItemController {
         itemService.itemUpdate(itemId, files, file, request);
         return ResponseJson.success("수정 성공!");
     }
-
 }

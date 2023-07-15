@@ -14,5 +14,4 @@ public class ResponseJson<T> {
     public static <T> ResponseJson<T> success(T result) {
         return new ResponseJson<>("success", result);
     }
-
 }

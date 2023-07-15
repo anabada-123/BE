@@ -11,13 +11,19 @@ import com.anabada.anabada.item.model.request.ItemCreateRequest;
 import com.anabada.anabada.item.model.type.ItemCate;
 import com.anabada.anabada.item.model.type.ItemStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +35,41 @@ public class ItemService {
     private String DEFAULT_IMG = "defulat\\기본이미지.png";
 
     //상품 전체 조회
-    public List<ItemFindResponse> getItem() {
-        return itemRepository.findAll().stream().map(ItemFindResponse::new).toList();
+    @Transactional(readOnly = true)
+    public List<ItemFindResponse> getItem(int page, int size) {
+        Sort.Direction direction = Sort.Direction.DESC;
+        Sort sort = Sort.by(direction,"");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        //내가 몇 페이지 에 몇개의 데이터를 어떤 정렬를 해서 가져올거야. 선언.
+
+        Page<Item> itemPage = itemRepository.findAll(pageable);
+        //-> Jpa 아! 몇 페이지에 몇개의 데이터를 어떤 정렬로 해서 데이터를 가져온다.
+
+        List<ItemFindResponse> itemFindResponses = itemPage.getContent().stream().map(ItemFindResponse::new).toList();
+
+        return itemFindResponses;
     }
+
+    //선택한 상품 조회
+    @Transactional(readOnly = true)
+    public ItemFindResponse getItem(Long id) {
+        Item item = itemRepository.findById(id).orElseThrow(
+                ()-> new ItemException(ItemErrorCode.ITEM_NULL));
+
+        ItemFindResponse itemFindResponse = new ItemFindResponse(item);
+        return itemFindResponse;
+    }
+
+    //게시글 삭제
+    public Long deleteItem(Long id) {
+        Item item = itemRepository.findById(id).orElseThrow(
+                ()-> new ItemException(ItemErrorCode.ITEM_NULL));
+
+        itemRepository.delete(item);
+        return id;
+    }
+
 
     @Transactional
     public void itemUpdate(Long itemId, List<MultipartFile> files, MultipartFile mainImg, ItemUpdateRequest request) {

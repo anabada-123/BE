@@ -15,12 +15,9 @@ public class ItemFindResponse {
     private String itemContent;
     private String tradingPosition;
     private String tradingItem;
-    private ItemCate cate;
-    private ItemStatus status;
     private String img;
-    private List<String> imgList; //맞는지 모름
-    private LocalDateTime createdAt; //2021 / 2022
-    private LocalDateTime modifiedAt; //2021 / null
+    private List<String> imgList;
+    private LocalDateTime day;
 
     public ItemFindResponse(Item item){
         this.id = item.getId();
@@ -28,9 +25,9 @@ public class ItemFindResponse {
         this.itemContent = item.getItemContent();
         this.tradingPosition = item.getTradingPosition();
         this.tradingItem = item.getTradingItem();
-        this.cate = item.getCate();
-        this.createdAt = item.getCreatedAt();
-        this.modifiedAt = item.getModifiedAt();
+        this.img = item.getImg();
+        this.imgList = item.getImgList();
+        this.day = item.getCreatedAt();
     }
 
 }
