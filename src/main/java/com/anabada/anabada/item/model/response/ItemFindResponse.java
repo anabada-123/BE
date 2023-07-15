@@ -19,8 +19,8 @@ public class ItemFindResponse {
     private ItemStatus status;
     private String img;
     private List<String> imgList; //맞는지 모름
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private LocalDateTime createdAt; //2021 / 2022
+    private LocalDateTime modifiedAt; //2021 / null
 
     public ItemFindResponse(Item item){
         this.id = item.getId();
@@ -32,7 +32,5 @@ public class ItemFindResponse {
         this.createdAt = item.getCreatedAt();
         this.modifiedAt = item.getModifiedAt();
     }
-
-
 
 }

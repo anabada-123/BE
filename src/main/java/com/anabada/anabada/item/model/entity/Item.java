@@ -49,7 +49,7 @@ public class Item extends Auditing {
     private String img;
 
     @Column
-    @ElementCollection(targetClass = String.class, fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     private List<String> imgList;
 
     public void updateMainImg(String img){

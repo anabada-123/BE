@@ -2,10 +2,10 @@ package com.anabada.anabada.item.service;
 
 import com.anabada.anabada.global.exception.ItemException;
 import com.anabada.anabada.global.exception.type.ItemErrorCode;
+import com.anabada.anabada.global.util.S3Utill;
 import com.anabada.anabada.item.model.request.ItemUpdateRequest;
 import com.anabada.anabada.item.repository.ItemRepository;
 import com.anabada.anabada.item.model.response.ItemFindResponse;
-import com.anabada.anabada.global.util.FileUtil;
 import com.anabada.anabada.item.model.entity.Item;
 import com.anabada.anabada.item.model.request.ItemCreateRequest;
 import com.anabada.anabada.item.model.type.ItemCate;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,12 +23,10 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ItemService {
 
-    private final FileUtil fileUtil;
     private final ItemRepository itemRepository;
+    private final S3Utill s3Utill;
 
     private String DEFAULT_IMG = "defulat\\기본이미지.png";
-    //TODO: EC2 AWS 배포 한후 IP 적어야함.
-    private String serverIp = "";
 
     //상품 전체 조회
     public List<ItemFindResponse> getItem() {
@@ -50,15 +47,21 @@ public class ItemService {
         if (request.check()) {
             if (!Objects.isNull(files)) {
                 for (String fileName : item.getImgList()) {
-                    fileUtil.deleteFile(fileName);
+                    s3Utill.deleteImage(fileName);
                 }
-                List<String> images = getImages(files, name);
+                List<String> images = new ArrayList<>();
+                for (MultipartFile file : files) {
+                    String fileName = name + System.nanoTime();
+                    s3Utill.saveFile(file, fileName);
+                    images.add(fileName);
+                }
                 item.updateImges(images); //이미지 파일 수정
             }
             if (!Objects.isNull(mainImg)) {
-                fileUtil.deleteFile(item.getImg());
-                String img = getImages(mainImg, name);
-                item.updateMainImg(img); //이미지 파일 수정
+                s3Utill.deleteImage(item.getImg());
+                String fileName = name + System.nanoTime();
+                s3Utill.saveFile(mainImg, fileName);
+                item.updateMainImg(fileName); //이미지 파일 수정
             }
         }
 
@@ -75,13 +78,24 @@ public class ItemService {
     }
 
     @Transactional
-    public void itemSave(List<MultipartFile> files, MultipartFile mainImg, ItemCreateRequest request) {
+    public void itemSave(List<MultipartFile> files, MultipartFile mainImg,
+                         ItemCreateRequest request) {
 
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
-        List<String> images = getImages(files, name);
-        String img = getImages(mainImg, name);
-        //
+
+        List<String> images = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            String fileName = name + System.nanoTime();
+
+            String url = s3Utill.saveFile(file, fileName);
+            System.out.println(url);
+
+            images.add(fileName);
+        }
+        String img = name + System.nanoTime();
+        s3Utill.saveFile(mainImg, img);
 
         itemRepository.save(
                 Item.builder()
@@ -96,28 +110,6 @@ public class ItemService {
                         .status(ItemStatus.SELLING)
                         .build()
         );
-
-    }
-
-
-    private List<String> getImages(List<MultipartFile> files, String userId) {
-
-        List<String> imageList = new ArrayList<>();
-        if (Objects.isNull(files)) {
-            imageList.add(DEFAULT_IMG);
-        } else {
-            return fileUtil.saveFileList(userId, files);
-        }
-        return imageList;
-
-    }
-
-    private String getImages(MultipartFile files, String userId) {
-
-        if (Objects.isNull(files)) {
-            return DEFAULT_IMG;
-        }
-        return fileUtil.saveFileOne(userId, files);
 
     }
 
