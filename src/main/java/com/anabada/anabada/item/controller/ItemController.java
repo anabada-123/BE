@@ -2,6 +2,7 @@ package com.anabada.anabada.item.controller;
 
 import com.anabada.anabada.item.model.request.ItemUpdateRequest;
 import com.anabada.anabada.item.model.response.ItemFindResponse;
+import com.anabada.anabada.item.model.response.PageResponseDto;
 import com.anabada.anabada.item.service.ItemService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
@@ -26,8 +27,8 @@ public class ItemController {
     private final ItemService itemService;
 
     //상품 조회
-    @GetMapping("/")
-    public List<ItemFindResponse> getItem(
+    @GetMapping("")
+    public PageResponseDto getItem(
             @RequestParam("page") int page)
     {
         return itemService.getItem(page-1, 10);
