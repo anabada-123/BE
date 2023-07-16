@@ -5,7 +5,7 @@ on:
     branches:
        - main # 어떠한 브랜치가 push 가 들어가면 실행 할건지.
 env:
-  S3_BUCKET_NAME: anabada123 #S3 이름
+  S3_BUCKET_NAME: codedeploy-s3-test123 #S3 이름
   CODE_DEPLOY_APPLICATION_NAME: CODE-DEPLOY_TEST #Deploy 이름
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: CODE-DEPLOY-GROUP #Deploy Grop 이름
 
