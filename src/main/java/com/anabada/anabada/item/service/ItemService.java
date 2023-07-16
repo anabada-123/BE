@@ -1,6 +1,8 @@
 package com.anabada.anabada.item.service;
 
+import com.anabada.anabada.global.exception.FileException;
 import com.anabada.anabada.global.exception.ItemException;
+import com.anabada.anabada.global.exception.type.FileErrorCode;
 import com.anabada.anabada.global.exception.type.ItemErrorCode;
 import com.anabada.anabada.global.util.S3Utill;
 import com.anabada.anabada.item.model.request.ItemUpdateRequest;
@@ -91,7 +93,7 @@ public class ItemService {
                 }
                 List<String> images = new ArrayList<>();
                 for (MultipartFile file : files) {
-                    String fileName = name + System.nanoTime();
+                    String fileName = name + System.nanoTime() + getExtension(file);
                     s3Utill.saveFile(file, fileName);
                     images.add(fileName);
                 }
@@ -99,7 +101,7 @@ public class ItemService {
             }
             if (!Objects.isNull(mainImg)) {
                 s3Utill.deleteImage(item.getImg());
-                String fileName = name + System.nanoTime();
+                String fileName = name + System.nanoTime() + getExtension(mainImg);
                 s3Utill.saveFile(mainImg, fileName);
                 item.updateMainImg(fileName); //이미지 파일 수정
             }
@@ -127,12 +129,9 @@ public class ItemService {
         List<String> images = new ArrayList<>();
 
         for (MultipartFile file : files) {
-            String fileName = name + System.nanoTime();
-
-            String url = s3Utill.saveFile(file, fileName);
-            System.out.println(url);
-
-            images.add(fileName+getExtension(file));
+            String fileName = name + System.nanoTime() + getExtension(file);
+           s3Utill.saveFile(file, fileName);
+            images.add(fileName);
         }
 
         String img = name + System.nanoTime()+getExtension(mainImg);
@@ -175,12 +174,15 @@ public class ItemService {
         String extension = null;
         if(StringUtils.hasText(contextType)){
             if(contextType.contains("image/jpeg")){
-                extension = ".jpg";
+                extension = ".jpeg";
             }else if(contextType.contains("image/png")){
                 extension = ".png";
+            }else if(contextType.contains("image/jpg")){
+                extension = ".jpg";
             }
+            return extension;
         }
-        return extension;
+        throw new FileException(FileErrorCode.FILE_ERROR);
     }
 
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 @Getter
 public class ItemFindResponse {
+
     private Long id;
     private String itemName;
     private String itemContent;
@@ -36,4 +37,5 @@ public class ItemFindResponse {
         }
         this.day = item.getCreatedAt();
     }
+
 }
