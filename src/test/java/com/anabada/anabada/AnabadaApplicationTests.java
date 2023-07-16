@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class AnabadaApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void contextLoadss() {
 	}
 
 }
