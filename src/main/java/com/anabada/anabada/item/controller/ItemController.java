@@ -62,7 +62,7 @@ public class ItemController {
     @PutMapping("/{id}")
     public String itemUpdate(
             @RequestPart(value = "item", required = false) @Valid ItemUpdateRequest request,
-            @RequestPart(value = "mainImg") MultipartFile file,
+            @RequestPart(value = "mainImg", required = false) MultipartFile file,
             @RequestPart(value = "img", required = false) List<MultipartFile> files,
             @PathVariable("id") Long itemId
     ) {
