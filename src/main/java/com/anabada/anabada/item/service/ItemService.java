@@ -71,6 +71,12 @@ public class ItemService {
                 () -> new ItemException(ItemErrorCode.ITEM_NULL));
 
         itemRepository.delete(item);
+
+        for (String s : item.getImgList()) {
+            s3Utill.deleteImage(s);
+        }
+        s3Utill.deleteImage(item.getTradingItem());
+
         return id;
     }
 
@@ -127,14 +133,15 @@ public class ItemService {
         String name = "test";
 
         List<String> images = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            String fileName = name + System.nanoTime() + getExtension(file);
-           s3Utill.saveFile(file, fileName);
-            images.add(fileName);
+        if(!Objects.isNull(files)){
+            for (MultipartFile file : files) {
+                String fileName = name + System.nanoTime() + getExtension(file);
+                s3Utill.saveFile(file, fileName);
+                images.add(fileName);
+            }
         }
 
-        String img = name + System.nanoTime()+getExtension(mainImg);
+        String img = name + System.nanoTime() + getExtension(mainImg);
         s3Utill.saveFile(mainImg, img);
 
         itemRepository.save(
@@ -169,15 +176,15 @@ public class ItemService {
         };
     }
 
-    private String getExtension(MultipartFile file){
+    private String getExtension(MultipartFile file) {
         String contextType = file.getContentType();
         String extension = null;
-        if(StringUtils.hasText(contextType)){
-            if(contextType.contains("image/jpeg")){
+        if (StringUtils.hasText(contextType)) {
+            if (contextType.contains("image/jpeg")) {
                 extension = ".jpeg";
-            }else if(contextType.contains("image/png")){
+            } else if (contextType.contains("image/png")) {
                 extension = ".png";
-            }else if(contextType.contains("image/jpg")){
+            } else if (contextType.contains("image/jpg")) {
                 extension = ".jpg";
             }
             return extension;
