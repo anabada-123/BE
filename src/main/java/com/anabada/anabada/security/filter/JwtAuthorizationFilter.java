@@ -30,55 +30,50 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        filterChain.doFilter(request, response);
+    public void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+
+        String tokenValue = jwtUtil.getTokenFromRequest(req);
+
+        if (StringUtils.hasText(tokenValue)) {
+            // JWT 토큰 substring
+            tokenValue = jwtUtil.substringToken(tokenValue);
+            log.info(tokenValue);
+
+            if (!jwtUtil.validateToken(tokenValue)) {
+                log.error("Token Error");
+                res.setStatus(400);
+                res.setContentType("text/plain;charset=UTF-8");
+                res.getWriter().write("토큰이 유효하지 않습니다.");
+                return;
+            }
+
+            Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
+
+            try {
+                setAuthentication(info.getSubject());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                return;
+            }
+        }
+
+        filterChain.doFilter(req, res);
     }
-//
-//    @Override
-//    public void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-//
-//        String tokenValue = jwtUtil.getTokenFromRequest(req);
-//
-//        if (StringUtils.hasText(tokenValue)) {
-//            // JWT 토큰 substring
-//            tokenValue = jwtUtil.substringToken(tokenValue);
-//            log.info(tokenValue);
-//
-//            if (!jwtUtil.validateToken(tokenValue)) {
-//                log.error("Token Error");
-//                res.setStatus(400);
-//                res.setContentType("text/plain;charset=UTF-8");
-//                res.getWriter().write("토큰이 유효하지 않습니다.");
-//                return;
-//            }
-//
-//            Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
-//
-//            try {
-//                setAuthentication(info.getSubject());
-//            } catch (Exception e) {
-//                log.error(e.getMessage());
-//                return;
-//            }
-//        }
-//
-//        filterChain.doFilter(req, res);
-//    }
-//
-//    // 인증 처리
-//    public void setAuthentication(String userid) {
-//        SecurityContext context = SecurityContextHolder.createEmptyContext();
-//        Authentication authentication = createAuthentication(userid); //인가 정보를 SecurityContext
-//        context.setAuthentication(authentication);
-//
-//        SecurityContextHolder.setContext(context);
-//    }
-//
-//    // 인증 객체 생성
-//    private Authentication createAuthentication(String userid) {
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(userid);
-//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//    }
+
+    // 인증 처리
+    public void setAuthentication(String userid) {
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        Authentication authentication = createAuthentication(userid); //인가 정보를 SecurityContext
+        context.setAuthentication(authentication);
+
+        SecurityContextHolder.setContext(context);
+    }
+
+    // 인증 객체 생성
+    private Authentication createAuthentication(String userid) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userid);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
 }
 
 

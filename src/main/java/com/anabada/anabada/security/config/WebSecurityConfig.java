@@ -60,8 +60,8 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/api/register/**", "/api/login").permitAll()
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/api/register/**", "/api/login").permitAll()
+                        .anyRequest().permitAll()
         );
 
         // 필터 관리
