@@ -62,6 +62,7 @@ public class ItemService {
                 () -> new ItemException(ItemErrorCode.ITEM_NULL));
 
         ItemFindResponse itemFindResponse = new ItemFindResponse(item);
+        itemFindResponse.getImgList().add(itemFindResponse.getImg());
         return itemFindResponse;
     }
 
