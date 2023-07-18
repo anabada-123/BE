@@ -100,6 +100,7 @@ public class ItemService {
             images.add(item.getImg());
             item.updateMainImg(request.mainImgName());
             item.updateImges(images);
+            return;
         }
 
         if (!Objects.isNull(files)) {
