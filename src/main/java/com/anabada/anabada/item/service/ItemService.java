@@ -91,38 +91,56 @@ public class ItemService {
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
 
+        List<String> imgList = new ArrayList<>();
 
-//        if (!Objects.isNull(files)) {
-//            for (String fileName : item.getImgList()) {
-//                s3Utill.deleteImage(fileName);
-//            }
-//            List<String> images = new ArrayList<>();
-//            for (MultipartFile file : files) {
-//                String fileName = name + System.nanoTime() + getExtension(file);
-//                s3Utill.saveFile(file, fileName);
-//                images.add(fileName);
-//            }
-//            item.updateImges(images); //이미지 파일 수정
-//        }
+        String img = "";
 
-//        if (!Objects.isNull(mainImg)) {
-//            s3Utill.deleteImage(item.getImg());
-//            String fileName = name + System.nanoTime() + getExtension(mainImg);
-//            s3Utill.saveFile(mainImg, fileName);
-//            item.updateMainImg(fileName); //이미지 파일 수정
-//        }
+        for (String itemImgName : item.getImgList()) {
+            boolean check = true;
+            for (String inputImgName : request.imgNameList()) {
 
+                if (itemImgName.equals(inputImgName)) {
+                    check = false;
+                }
 
-//
-//        item.updateItemAll(
-//                request.itemName(),
-//                request.itemContent(),
-//                request.itemOneContent(),
-//                request.tradingPosition(),
-//                request.tradingItem(),
-//                getCate(request.cate()),
-//                getStatus(request.status())
-//        );
+            }
+            //mainImg 체크
+            if (itemImgName.equals(request.mainImgName())) {
+                img = itemImgName;
+            }
+            //해당 경로의 사진을 다시 업데이트할때 안올리게 된다면.
+            if (check) {
+                s3Utill.deleteImage(itemImgName);
+            } else {
+                imgList.add(itemImgName);
+            }
+
+        }
+
+        for (MultipartFile file : files) {
+
+            //메인 이미지만 따로 처리 하기 위한 작업.
+            if (file.getOriginalFilename().equals(request.mainImgName())) {
+                img = name + System.nanoTime() + getExtension(file);
+                s3Utill.saveFile(file, img);
+            }
+
+            String fileName = name + System.nanoTime() + getExtension(file);
+            s3Utill.saveFile(file, fileName);
+            imgList.add(fileName);
+        }
+
+        //이미지 수정 쿼리 더티 체킹
+        item.updateImges(imgList);
+        item.updateMainImg(img);
+        item.updateItemAll(
+                request.itemName(),
+                request.itemContent(),
+                request.itemOneContent(),
+                request.tradingPosition(),
+                request.tradingItem(),
+                getCate(request.cate()),
+                getStatus(request.status());
 
     }
 
