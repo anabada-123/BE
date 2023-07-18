@@ -1,6 +1,6 @@
 package com.anabada.anabada.security.filter;
 
-import com.anabada.anabada.security.UserDetailsServiceImpl;
+import com.anabada.anabada.security.model.UserDetailsServiceImpl;
 import com.anabada.anabada.security.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -63,7 +63,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     // 인증 처리
     public void setAuthentication(String userid) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication authentication = createAuthentication(userid);
+        Authentication authentication = createAuthentication(userid); //인가 정보를 SecurityContext
         context.setAuthentication(authentication);
 
         SecurityContextHolder.setContext(context);

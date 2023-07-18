@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Table(name = "user")
 public class User extends Auditing {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,4 +41,5 @@ public class User extends Auditing {
         this.email = email;
         this.phonenumber = phonenumber;
     }
+
 }

@@ -19,7 +19,7 @@ public class S3Utill {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-
+    //2년전 막차 -> Spring 취업 무난하게 -> AWS / Kubernetes + Spring
     public String saveFile(MultipartFile multipartFile, String originalFilename)  {
 
         ObjectMetadata metadata = new ObjectMetadata();

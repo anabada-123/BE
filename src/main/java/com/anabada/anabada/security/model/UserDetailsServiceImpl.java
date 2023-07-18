@@ -1,4 +1,4 @@
-package com.anabada.anabada.security;
+package com.anabada.anabada.security.model;
 
 import com.anabada.anabada.security.model.entity.User;
 import com.anabada.anabada.security.repository.UserRepository;
@@ -23,4 +23,5 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new UserDetailsImpl(user);
     }
+
 }

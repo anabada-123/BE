@@ -1,6 +1,6 @@
 package com.anabada.anabada.security.config;
 
-import com.anabada.anabada.security.UserDetailsServiceImpl;
+import com.anabada.anabada.security.model.UserDetailsServiceImpl;
 import com.anabada.anabada.security.filter.JwtAuthenticationFilter;
 import com.anabada.anabada.security.filter.JwtAuthorizationFilter;
 import com.anabada.anabada.security.jwt.JwtUtil;
