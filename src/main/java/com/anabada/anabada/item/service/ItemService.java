@@ -93,65 +93,25 @@ public class ItemService {
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
 
-        List<String> imgList = new ArrayList<>();
+        List<String> imgList = item.getImgList();
 
-        String img = "";
+        String mainImg="";
 
-        //기존에 있던 데이터들.
-        for (String itemimg : item.getImgList()) {
-
-            boolean check = true;
-
-            for (String inputImgName : request.imgNameList()) {
-
-                if (itemimg.equals(inputImgName)) {
-                    check = false;
-                    break;
-                }
-
+        for (MultipartFile file : files) {
+            String fileName = name + System.nanoTime() + getExtension(file);
+            if(request.mainImgName().equals(file.getOriginalFilename())){
+                mainImg = fileName;
             }
-
-            //mainImg 체크
-            if (itemimg.equals(request.mainImgName())) {
-                img = itemimg;
-            }
-
-            //해당 경로의 사진을 다시 업데이트할때 안올리게 된다면.
-            if (check) {
-                s3Utill.deleteImage(itemimg);
-                continue;
-            }
-
-            System.out.println("1번쨰 추가 : "+itemimg);
-            imgList.add(itemimg);
-
+            s3Utill.saveFile(file, fileName);
+            imgList.add(fileName);
         }
 
-        //새롭게 파일 추가 된것.
-        if (!Objects.isNull(files)) {
 
-            for (MultipartFile file : files) {
-                String fileName = name + System.nanoTime() + getExtension(file);
 
-                //메인 이미지만 따로 처리 하기 위한 작업.
-                if (file.getOriginalFilename().equals(request.mainImgName())) {
-                    img = fileName;
-                    s3Utill.saveFile(file, fileName);
-                    imgList.add(item.getImg());
-                    System.out.println("2번쨰 추가 : 메인이미지 추가! "+file.getOriginalFilename());
-                    continue;
-                }
 
-                s3Utill.saveFile(file, fileName);
-                System.out.println("2번쨰 추가 : "+file.getOriginalFilename());
-                imgList.add(fileName);
-            }
-
-        }
-        System.out.println("다 추가 한것. : "+imgList);
         //이미지 수정 쿼리 더티 체킹
         item.updateImges(imgList);
-        item.updateMainImg(img);
+        item.updateMainImg(mainImg);
         item.updateItemAll(
                 request.itemName(),
                 request.itemContent(),
@@ -174,7 +134,7 @@ public class ItemService {
 
         List<String> images = new ArrayList<>();
         for (MultipartFile file : files) {
-            System.out.println(" : "+file.getOriginalFilename());
+            System.out.println(" : " + file.getOriginalFilename());
             //메인 이미지만 따로 처리 하기 위한 작업.
             if (file.getOriginalFilename().equals(request.mainImgName())) {
                 img = name + System.nanoTime() + getExtension(file);
