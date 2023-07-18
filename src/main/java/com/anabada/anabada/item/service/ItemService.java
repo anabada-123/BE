@@ -106,9 +106,6 @@ public class ItemService {
             imgList.add(fileName);
         }
 
-
-
-
         //이미지 수정 쿼리 더티 체킹
         item.updateImges(imgList);
         item.updateMainImg(mainImg);
