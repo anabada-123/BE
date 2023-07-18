@@ -97,7 +97,7 @@ public class ItemService {
         String img = "";
 
         if(!request.mainImgName().equals(item.getImg())){
-            images.add(item.getImg());
+            images.remove(request.mainImgName());
             item.updateMainImg(request.mainImgName());
             item.updateImges(images);
             return;
