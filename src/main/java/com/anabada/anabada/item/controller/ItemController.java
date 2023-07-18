@@ -48,13 +48,12 @@ public class ItemController {
 
 
     //TODO: 로그인 기능 추가시 아이디 넣어야함.
-    @PostMapping(consumes = {"multipart/form-data"})
+    @PostMapping
     public String itemSave(
             @RequestPart(value = "item", required = false) @Valid ItemCreateRequest request,
-            @RequestPart(value = "mainImg") MultipartFile file,
-            @RequestPart(value = "img", required = false) List<MultipartFile> files
+            @RequestPart(value = "img") List<MultipartFile> files
     ) {
-        itemService.itemSave(files, file, request);
+        itemService.itemSave(files, request);
         return "저장 성공!";
     }
 
@@ -62,12 +61,13 @@ public class ItemController {
     @PutMapping("/{id}")
     public String itemUpdate(
             @RequestPart(value = "item", required = false) @Valid ItemUpdateRequest request,
-            @RequestPart(value = "mainImg", required = false) MultipartFile file,
             @RequestPart(value = "img", required = false) List<MultipartFile> files,
             @PathVariable("id") Long itemId
     ) {
-        itemService.itemUpdate(itemId, files, file, request);
+
+        itemService.itemUpdate(itemId, files, request);
         return "수정 성공!";
     }
+
 
 }

@@ -62,6 +62,7 @@ public class ItemService {
                 () -> new ItemException(ItemErrorCode.ITEM_NULL));
 
         ItemFindResponse itemFindResponse = new ItemFindResponse(item);
+        itemFindResponse.getImgList().add(itemFindResponse.getImg());
         return itemFindResponse;
     }
 
@@ -82,7 +83,8 @@ public class ItemService {
 
 
     @Transactional
-    public void itemUpdate(Long itemId, List<MultipartFile> files, MultipartFile mainImg, ItemUpdateRequest request) {
+    public void itemUpdate(Long itemId, List<MultipartFile> files, ItemUpdateRequest request) {
+
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> {
                     throw new ItemException(ItemErrorCode.ITEM_NULL);
@@ -91,28 +93,63 @@ public class ItemService {
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
 
+        List<String> imgList = new ArrayList<>();
+
+        String img = "";
+
+        System.out.println(request.mainImgName());
+        System.out.println(request.imgNameList());
+        System.out.println(files.get(0).getOriginalFilename());
+
+        for (String itemimg : item.getImgList()) {
+
+            boolean check = true;
+
+            for (String inputImgName : request.imgNameList()) {
+
+                if (itemimg.equals(inputImgName)) {
+                    check = false;
+                }
+
+            }
+
+            //mainImg 체크
+            if (itemimg.equals(request.mainImgName())) {
+                img = itemimg;
+            }
+
+            //해당 경로의 사진을 다시 업데이트할때 안올리게 된다면.
+            if (check) {
+                s3Utill.deleteImage(itemimg);
+                continue;
+            }
+
+            imgList.add(itemimg);
+
+        }
 
         if (!Objects.isNull(files)) {
-            for (String fileName : item.getImgList()) {
-                s3Utill.deleteImage(fileName);
-            }
-            List<String> images = new ArrayList<>();
+
             for (MultipartFile file : files) {
+
+                //메인 이미지만 따로 처리 하기 위한 작업.
+                if (file.getOriginalFilename().equals(request.mainImgName())) {
+                    img = name + System.nanoTime() + getExtension(file);
+                    s3Utill.saveFile(file, img);
+                    imgList.add(request.mainImgName());
+                    continue;
+                }
+
                 String fileName = name + System.nanoTime() + getExtension(file);
                 s3Utill.saveFile(file, fileName);
-                images.add(fileName);
+                imgList.add(fileName);
             }
-            item.updateImges(images); //이미지 파일 수정
+
         }
 
-        if (!Objects.isNull(mainImg)) {
-            s3Utill.deleteImage(item.getImg());
-            String fileName = name + System.nanoTime() + getExtension(mainImg);
-            s3Utill.saveFile(mainImg, fileName);
-            item.updateMainImg(fileName); //이미지 파일 수정
-        }
-
-
+        //이미지 수정 쿼리 더티 체킹
+        item.updateImges(imgList);
+        item.updateMainImg(img);
         item.updateItemAll(
                 request.itemName(),
                 request.itemContent(),
@@ -126,23 +163,28 @@ public class ItemService {
     }
 
     @Transactional
-    public void itemSave(List<MultipartFile> files, MultipartFile mainImg,
+    public void itemSave(List<MultipartFile> files,
                          ItemCreateRequest request) {
 
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
+        String img = "";
 
         List<String> images = new ArrayList<>();
-        if (!Objects.isNull(files)) {
-            for (MultipartFile file : files) {
-                String fileName = name + System.nanoTime() + getExtension(file);
-                s3Utill.saveFile(file, fileName);
-                images.add(fileName);
+        for (MultipartFile file : files) {
+            System.out.println(" : "+file.getOriginalFilename());
+            //메인 이미지만 따로 처리 하기 위한 작업.
+            if (file.getOriginalFilename().equals(request.mainImgName())) {
+                img = name + System.nanoTime() + getExtension(file);
+                s3Utill.saveFile(file, img);
+                continue;
             }
+
+            String fileName = name + System.nanoTime() + getExtension(file);
+            s3Utill.saveFile(file, fileName);
+            images.add(fileName);
         }
 
-        String img = name + System.nanoTime() + getExtension(mainImg);
-        s3Utill.saveFile(mainImg, img);
 
         itemRepository.save(
                 Item.builder()

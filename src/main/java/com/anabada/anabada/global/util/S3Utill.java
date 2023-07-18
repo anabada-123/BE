@@ -14,6 +14,7 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class S3Utill {
+
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -36,4 +37,5 @@ public class S3Utill {
     public void deleteImage(String originalFilename)  {
         amazonS3.deleteObject(bucket, originalFilename);
     }
+
 }
