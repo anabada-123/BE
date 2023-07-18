@@ -166,6 +166,7 @@ public class ItemService {
             //메인 이미지만 따로 처리 하기 위한 작업.
             if (file.getOriginalFilename().equals(request.mainImgName())) {
                 img = name + System.nanoTime() + getExtension(file);
+                s3Utill.saveFile(file, img);
                 continue;
             }
 
