@@ -33,7 +33,7 @@ public class ItemFindResponse {
         this.imgList = new ArrayList<>();
         for (String imgUrl : item.getImgList()) {
             String s = "https://anabada123.s3.ap-northeast-2.amazonaws.com/" + imgUrl;
-            this.imgList.add(s);
+            imgList.add(s);
         }
         imgList.add(img);
         this.day = item.getCreatedAt();
