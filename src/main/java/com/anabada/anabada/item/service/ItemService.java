@@ -117,17 +117,20 @@ public class ItemService {
 
         }
 
-        for (MultipartFile file : files) {
+        if(Objects.isNull(files)){
+            for (MultipartFile file : files) {
 
-            //메인 이미지만 따로 처리 하기 위한 작업.
-            if (file.getOriginalFilename().equals(request.mainImgName())) {
-                img = name + System.nanoTime() + getExtension(file);
-                s3Utill.saveFile(file, img);
+                //메인 이미지만 따로 처리 하기 위한 작업.
+                if (file.getOriginalFilename().equals(request.mainImgName())) {
+                    img = name + System.nanoTime() + getExtension(file);
+                    s3Utill.saveFile(file, img);
+                }
+
+                String fileName = name + System.nanoTime() + getExtension(file);
+                s3Utill.saveFile(file, fileName);
+                imgList.add(fileName);
             }
 
-            String fileName = name + System.nanoTime() + getExtension(file);
-            s3Utill.saveFile(file, fileName);
-            imgList.add(fileName);
         }
 
         //이미지 수정 쿼리 더티 체킹
