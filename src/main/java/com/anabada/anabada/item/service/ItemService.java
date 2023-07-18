@@ -119,11 +119,13 @@ public class ItemService {
             imgList.add(itemimg);
 
         }
-
+        System.out.println("files : "+files);
         if (!Objects.isNull(files)) {
             for (MultipartFile file : files) {
 
                 //메인 이미지만 따로 처리 하기 위한 작업.
+                System.out.println(file.getOriginalFilename());
+                System.out.println(request.mainImgName());
                 if (file.getOriginalFilename().equals(request.mainImgName())) {
                     img = name + System.nanoTime() + getExtension(file);
                     s3Utill.saveFile(file, img);
