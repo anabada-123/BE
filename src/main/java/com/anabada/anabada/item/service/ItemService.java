@@ -162,10 +162,11 @@ public class ItemService {
 
         List<String> images = new ArrayList<>();
         for (MultipartFile file : files) {
-
+            System.out.println(" : "+file.getOriginalFilename());
             //메인 이미지만 따로 처리 하기 위한 작업.
             if (file.getOriginalFilename().equals(request.mainImgName())) {
                 img = name + System.nanoTime() + getExtension(file);
+                continue;
             }
 
             String fileName = name + System.nanoTime() + getExtension(file);
