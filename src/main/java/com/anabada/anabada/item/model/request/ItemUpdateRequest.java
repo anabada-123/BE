@@ -32,8 +32,7 @@ public record ItemUpdateRequest(
         @NotNull
         @NotBlank
         String mainImgName,
-        @NotNull
-        @NotBlank
+
         List<String> imgNameList
 
 ) {
