@@ -84,14 +84,11 @@ public class ItemService {
     @Transactional
     public void itemUpdate(Long itemId, List<MultipartFile> files, ItemUpdateRequest request) {
 
-        System.out.println("123");
-        System.out.println(request.imgNameList());
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> {
                     throw new ItemException(ItemErrorCode.ITEM_NULL);
                 });
 
-        System.out.println("1");
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
 
@@ -121,9 +118,7 @@ public class ItemService {
 
         }
 
-        System.out.println("3");
-
-        if(Objects.isNull(files)){
+        if(files.isEmpty()){
             for (MultipartFile file : files) {
 
                 //메인 이미지만 따로 처리 하기 위한 작업.
