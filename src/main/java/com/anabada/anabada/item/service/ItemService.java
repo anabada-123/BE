@@ -140,7 +140,8 @@ public class ItemService {
                 request.tradingPosition(),
                 request.tradingItem(),
                 getCate(request.cate()),
-                getStatus(request.status());
+                getStatus(request.status())
+        );
 
     }
 
