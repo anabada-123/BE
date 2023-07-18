@@ -41,7 +41,7 @@ public class ItemController {
 
 
     //게시글 삭제
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public Long deleteItem(@PathVariable Long id){
         return itemService.deleteItem(id);
     }
