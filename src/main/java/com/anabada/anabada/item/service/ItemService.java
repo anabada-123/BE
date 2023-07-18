@@ -76,7 +76,7 @@ public class ItemService {
         for (String s : item.getImgList()) {
             s3Utill.deleteImage(s);
         }
-        s3Utill.deleteImage(item.getTradingItem());
+        s3Utill.deleteImage(item.getImg());
 
         return id;
     }
@@ -97,10 +97,7 @@ public class ItemService {
 
         String img = "";
 
-        System.out.println(request.mainImgName());
-        System.out.println(request.imgNameList());
-        System.out.println(files.get(0).getOriginalFilename());
-
+        //기존에 있던 데이터들.
         for (String itemimg : item.getImgList()) {
 
             boolean check = true;
@@ -109,6 +106,7 @@ public class ItemService {
 
                 if (itemimg.equals(inputImgName)) {
                     check = false;
+                    break;
                 }
 
             }
@@ -124,29 +122,32 @@ public class ItemService {
                 continue;
             }
 
+            System.out.println("1번쨰 추가 : "+itemimg);
             imgList.add(itemimg);
 
         }
 
+        //새롭게 파일 추가 된것.
         if (!Objects.isNull(files)) {
 
             for (MultipartFile file : files) {
+                String fileName = name + System.nanoTime() + getExtension(file);
 
                 //메인 이미지만 따로 처리 하기 위한 작업.
                 if (file.getOriginalFilename().equals(request.mainImgName())) {
-                    img = name + System.nanoTime() + getExtension(file);
-                    s3Utill.saveFile(file, img);
+                    img = fileName;
+                    s3Utill.saveFile(file, fileName);
                     imgList.add(request.mainImgName());
                     continue;
                 }
 
-                String fileName = name + System.nanoTime() + getExtension(file);
                 s3Utill.saveFile(file, fileName);
+                System.out.println("2번쨰 추가 : "+file.getOriginalFilename());
                 imgList.add(fileName);
             }
 
         }
-
+        System.out.println("다 추가 한것. : "+imgList);
         //이미지 수정 쿼리 더티 체킹
         item.updateImges(imgList);
         item.updateMainImg(img);
