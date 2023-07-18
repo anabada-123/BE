@@ -93,11 +93,40 @@ public class ItemService {
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
 
-        List<String> imgList = item.getImgList();
+        List<String> imgList = new ArrayList<>();
 
         String img = "";
 
+        System.out.println(request.mainImgName());
+        System.out.println(request.imgNameList());
+        System.out.println(files.get(0).getOriginalFilename());
+
+        for (String itemimg : item.getImgList()) {
+            boolean check = true;
+            for (String inputImgName : request.imgNameList()) {
+
+                if (itemimg.equals(inputImgName)) {
+                    check = false;
+                }
+
+            }
+            //mainImg 체크
+            if (itemimg.equals(request.mainImgName())) {
+                img = itemimg;
+            }
+
+            //해당 경로의 사진을 다시 업데이트할때 안올리게 된다면.
+            if (check) {
+                s3Utill.deleteImage(itemimg);
+                continue;
+            }
+
+            imgList.add(itemimg);
+
+        }
+
         if (!Objects.isNull(files)) {
+
             for (MultipartFile file : files) {
 
                 //메인 이미지만 따로 처리 하기 위한 작업.
