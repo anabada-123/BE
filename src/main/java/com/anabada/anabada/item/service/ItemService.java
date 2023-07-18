@@ -96,29 +96,31 @@ public class ItemService {
 
         String img = "";
 
-        for (String itemImgName : item.getImgList()) {
+        for (String itemimg : item.getImgList()) {
             boolean check = true;
             for (String inputImgName : request.imgNameList()) {
 
-                if (itemImgName.equals(inputImgName)) {
+                if (itemimg.equals(inputImgName)) {
                     check = false;
                 }
 
             }
             //mainImg 체크
-            if (itemImgName.equals(request.mainImgName())) {
-                img = itemImgName;
+            if (itemimg.equals(request.mainImgName())) {
+                img = itemimg;
             }
+
             //해당 경로의 사진을 다시 업데이트할때 안올리게 된다면.
             if (check) {
-                s3Utill.deleteImage(itemImgName);
-            } else {
-                imgList.add(itemImgName);
+                s3Utill.deleteImage(itemimg);
+                continue;
             }
+
+            imgList.add(itemimg);
 
         }
 
-        if(!Objects.isNull(files)){
+        if (!Objects.isNull(files)) {
             for (MultipartFile file : files) {
 
                 //메인 이미지만 따로 처리 하기 위한 작업.
@@ -134,8 +136,6 @@ public class ItemService {
             }
 
         }
-
-        System.out.println("4");
 
         //이미지 수정 쿼리 더티 체킹
         item.updateImges(imgList);
@@ -166,7 +166,6 @@ public class ItemService {
             //메인 이미지만 따로 처리 하기 위한 작업.
             if (file.getOriginalFilename().equals(request.mainImgName())) {
                 img = name + System.nanoTime() + getExtension(file);
-                s3Utill.saveFile(file, img);
             }
 
             String fileName = name + System.nanoTime() + getExtension(file);
