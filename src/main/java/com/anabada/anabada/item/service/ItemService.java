@@ -125,6 +125,7 @@ public class ItemService {
                 if (file.getOriginalFilename().equals(request.mainImgName())) {
                     img = name + System.nanoTime() + getExtension(file);
                     s3Utill.saveFile(file, img);
+                    continue;
                 }
 
                 String fileName = name + System.nanoTime() + getExtension(file);
