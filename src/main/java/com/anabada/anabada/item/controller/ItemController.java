@@ -64,8 +64,8 @@ public class ItemController {
             @RequestPart(value = "img", required = false) List<MultipartFile> files,
             @PathVariable("id") Long itemId
     ) {
-        System.out.println(files);
-//        itemService.itemUpdate(itemId, files, request);
+
+        itemService.itemUpdate(itemId, files, request);
         return "수정 성공!";
     }
 

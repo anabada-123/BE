@@ -83,11 +83,15 @@ public class ItemService {
 
     @Transactional
     public void itemUpdate(Long itemId, List<MultipartFile> files, ItemUpdateRequest request) {
+
+        System.out.println("123");
+        System.out.println(request.imgNameList());
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> {
                     throw new ItemException(ItemErrorCode.ITEM_NULL);
                 });
 
+        System.out.println("1");
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
 
@@ -117,6 +121,8 @@ public class ItemService {
 
         }
 
+        System.out.println("3");
+
         if(Objects.isNull(files)){
             for (MultipartFile file : files) {
 
@@ -132,6 +138,8 @@ public class ItemService {
             }
 
         }
+
+        System.out.println("4");
 
         //이미지 수정 쿼리 더티 체킹
         item.updateImges(imgList);
