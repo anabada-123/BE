@@ -138,6 +138,7 @@ public class ItemService {
                     img = fileName;
                     s3Utill.saveFile(file, fileName);
                     imgList.add(request.mainImgName());
+                    System.out.println("2번쨰 추가 : 메인이미지 추가! "+file.getOriginalFilename());
                     continue;
                 }
 
