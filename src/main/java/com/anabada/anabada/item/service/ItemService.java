@@ -118,7 +118,7 @@ public class ItemService {
 
         }
 
-        if(files.isEmpty()){
+        if(!files.isEmpty()){
             for (MultipartFile file : files) {
 
                 //메인 이미지만 따로 처리 하기 위한 작업.
