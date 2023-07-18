@@ -3,6 +3,8 @@ package com.anabada.anabada.item.model.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 public record ItemUpdateRequest(
         @NotNull
         @NotBlank
@@ -29,7 +31,10 @@ public record ItemUpdateRequest(
         String status,
         @NotNull
         @NotBlank
-        String mainImgName
+        String mainImgName,
+        @NotNull
+        @NotBlank
+        List<String> imgNameList
 
 ) {
 }

@@ -92,18 +92,18 @@ public class ItemService {
         String name = "test";
 
 
-        if (!Objects.isNull(files)) {
-            for (String fileName : item.getImgList()) {
-                s3Utill.deleteImage(fileName);
-            }
-            List<String> images = new ArrayList<>();
-            for (MultipartFile file : files) {
-                String fileName = name + System.nanoTime() + getExtension(file);
-                s3Utill.saveFile(file, fileName);
-                images.add(fileName);
-            }
-            item.updateImges(images); //이미지 파일 수정
-        }
+//        if (!Objects.isNull(files)) {
+//            for (String fileName : item.getImgList()) {
+//                s3Utill.deleteImage(fileName);
+//            }
+//            List<String> images = new ArrayList<>();
+//            for (MultipartFile file : files) {
+//                String fileName = name + System.nanoTime() + getExtension(file);
+//                s3Utill.saveFile(file, fileName);
+//                images.add(fileName);
+//            }
+//            item.updateImges(images); //이미지 파일 수정
+//        }
 
 //        if (!Objects.isNull(mainImg)) {
 //            s3Utill.deleteImage(item.getImg());
@@ -113,15 +113,16 @@ public class ItemService {
 //        }
 
 
-        item.updateItemAll(
-                request.itemName(),
-                request.itemContent(),
-                request.itemOneContent(),
-                request.tradingPosition(),
-                request.tradingItem(),
-                getCate(request.cate()),
-                getStatus(request.status())
-        );
+//
+//        item.updateItemAll(
+//                request.itemName(),
+//                request.itemContent(),
+//                request.itemOneContent(),
+//                request.tradingPosition(),
+//                request.tradingItem(),
+//                getCate(request.cate()),
+//                getStatus(request.status())
+//        );
 
     }
 
