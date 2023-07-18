@@ -6,6 +6,7 @@ import java.util.List;
 
 @Getter
 public class PageResponseDto {
+
     private int pageSize;
     private List<ItemFindResponse> items;
 

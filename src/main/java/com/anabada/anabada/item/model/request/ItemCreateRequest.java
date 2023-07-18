@@ -24,6 +24,9 @@ public record ItemCreateRequest(
         String tradingItem,
         @NotNull
         @NotBlank
-        String cate
+        String cate,
+        @NotNull
+        @NotBlank
+        String mainImgName
 ) {
 }
