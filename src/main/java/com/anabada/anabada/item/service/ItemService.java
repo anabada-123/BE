@@ -102,7 +102,9 @@ public class ItemService {
         System.out.println(files.get(0).getOriginalFilename());
 
         for (String itemimg : item.getImgList()) {
+
             boolean check = true;
+
             for (String inputImgName : request.imgNameList()) {
 
                 if (itemimg.equals(inputImgName)) {
@@ -110,6 +112,7 @@ public class ItemService {
                 }
 
             }
+
             //mainImg 체크
             if (itemimg.equals(request.mainImgName())) {
                 img = itemimg;
@@ -133,6 +136,7 @@ public class ItemService {
                 if (file.getOriginalFilename().equals(request.mainImgName())) {
                     img = name + System.nanoTime() + getExtension(file);
                     s3Utill.saveFile(file, img);
+                    imgList.add(request.mainImgName());
                     continue;
                 }
 
