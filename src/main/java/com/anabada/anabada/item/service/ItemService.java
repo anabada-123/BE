@@ -96,18 +96,28 @@ public class ItemService {
         images.add(item.getImg());
         String img = "";
 
-        for (MultipartFile file : files) {
-            System.out.println(" : " + file.getOriginalFilename());
-            String fileName = name + System.nanoTime() + getExtension(file);
-            //메인 이미지만 따로 처리 하기 위한 작업.
-            if (file.getOriginalFilename().equals(request.mainImgName())) {
-                img = fileName;
+        if(!request.mainImgName().equals(item.getImg())){
+            images.add(item.getImg());
+            item.updateMainImg(request.mainImgName());
+            item.updateImges(images);
+        }
+
+        if (!Objects.isNull(files)) {
+
+            for (MultipartFile file : files) {
+                System.out.println(" : " + file.getOriginalFilename());
+                String fileName = name + System.nanoTime() + getExtension(file);
+                //메인 이미지만 따로 처리 하기 위한 작업.
+                if (file.getOriginalFilename().equals(request.mainImgName())) {
+                    img = fileName;
+                    s3Utill.saveFile(file, fileName);
+                    continue;
+                }
+
                 s3Utill.saveFile(file, fileName);
-                continue;
+                images.add(fileName);
             }
 
-            s3Utill.saveFile(file, fileName);
-            images.add(fileName);
         }
 
         //이미지 수정 쿼리 더티 체킹
@@ -135,7 +145,7 @@ public class ItemService {
 
         List<String> images = new ArrayList<>();
         for (MultipartFile file : files) {
-            System.out.println(" : "+file.getOriginalFilename());
+            System.out.println(" : " + file.getOriginalFilename());
             //메인 이미지만 따로 처리 하기 위한 작업.
             if (file.getOriginalFilename().equals(request.mainImgName())) {
                 img = name + System.nanoTime() + getExtension(file);
