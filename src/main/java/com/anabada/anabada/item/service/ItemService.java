@@ -94,7 +94,7 @@ public class ItemService {
         String name = "test";
 
         List<String> images = item.getImgList();
-
+        images.add(item.getImg());
         String img = "";
 
         for (MultipartFile file : files) {
@@ -103,7 +103,6 @@ public class ItemService {
             //메인 이미지만 따로 처리 하기 위한 작업.
             if (file.getOriginalFilename().equals(request.mainImgName())) {
                 img = fileName;
-                images.add(request.mainImgName());
                 s3Utill.saveFile(file, fileName);
                 continue;
             }
