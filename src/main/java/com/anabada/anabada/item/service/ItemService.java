@@ -91,27 +91,27 @@ public class ItemService {
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
 
-        //TODO: check = 1 면 파일 변화 / 그 외 파일변화 X
-        if (request.check()) {
-            if (!Objects.isNull(files)) {
-                for (String fileName : item.getImgList()) {
-                    s3Utill.deleteImage(fileName);
-                }
-                List<String> images = new ArrayList<>();
-                for (MultipartFile file : files) {
-                    String fileName = name + System.nanoTime() + getExtension(file);
-                    s3Utill.saveFile(file, fileName);
-                    images.add(fileName);
-                }
-                item.updateImges(images); //이미지 파일 수정
+
+        if (!Objects.isNull(files)) {
+            for (String fileName : item.getImgList()) {
+                s3Utill.deleteImage(fileName);
             }
-            if (!Objects.isNull(mainImg)) {
-                s3Utill.deleteImage(item.getImg());
-                String fileName = name + System.nanoTime() + getExtension(mainImg);
-                s3Utill.saveFile(mainImg, fileName);
-                item.updateMainImg(fileName); //이미지 파일 수정
+            List<String> images = new ArrayList<>();
+            for (MultipartFile file : files) {
+                String fileName = name + System.nanoTime() + getExtension(file);
+                s3Utill.saveFile(file, fileName);
+                images.add(fileName);
             }
+            item.updateImges(images); //이미지 파일 수정
         }
+
+        if (!Objects.isNull(mainImg)) {
+            s3Utill.deleteImage(item.getImg());
+            String fileName = name + System.nanoTime() + getExtension(mainImg);
+            s3Utill.saveFile(mainImg, fileName);
+            item.updateMainImg(fileName); //이미지 파일 수정
+        }
+
 
         item.updateItemAll(
                 request.itemName(),
@@ -133,7 +133,7 @@ public class ItemService {
         String name = "test";
 
         List<String> images = new ArrayList<>();
-        if(!Objects.isNull(files)){
+        if (!Objects.isNull(files)) {
             for (MultipartFile file : files) {
                 String fileName = name + System.nanoTime() + getExtension(file);
                 s3Utill.saveFile(file, fileName);

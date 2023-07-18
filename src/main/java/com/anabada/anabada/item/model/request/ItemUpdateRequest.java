@@ -26,8 +26,7 @@ public record ItemUpdateRequest(
         String cate,
         @NotNull
         @NotBlank
-        String status,
+        String status
 
-        Boolean check
 ) {
 }
