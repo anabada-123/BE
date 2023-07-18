@@ -93,22 +93,28 @@ public class ItemService {
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
 
-        List<String> imgList = item.getImgList();
+        List<String> images = item.getImgList();
 
-        String mainImg="";
+        String img = "";
 
         for (MultipartFile file : files) {
+            System.out.println(" : " + file.getOriginalFilename());
             String fileName = name + System.nanoTime() + getExtension(file);
-            if(request.mainImgName().equals(file.getOriginalFilename())){
-                mainImg = fileName;
+            //메인 이미지만 따로 처리 하기 위한 작업.
+            if (file.getOriginalFilename().equals(request.mainImgName())) {
+                img = fileName;
+                images.add(request.mainImgName());
+                s3Utill.saveFile(file, fileName);
+                continue;
             }
+
             s3Utill.saveFile(file, fileName);
-            imgList.add(fileName);
+            images.add(fileName);
         }
 
         //이미지 수정 쿼리 더티 체킹
-        item.updateImges(imgList);
-        item.updateMainImg(mainImg);
+        item.updateImges(images);
+        item.updateMainImg(img);
         item.updateItemAll(
                 request.itemName(),
                 request.itemContent(),
@@ -131,7 +137,7 @@ public class ItemService {
 
         List<String> images = new ArrayList<>();
         for (MultipartFile file : files) {
-            System.out.println(" : " + file.getOriginalFilename());
+            System.out.println(" : "+file.getOriginalFilename());
             //메인 이미지만 따로 처리 하기 위한 작업.
             if (file.getOriginalFilename().equals(request.mainImgName())) {
                 img = name + System.nanoTime() + getExtension(file);
