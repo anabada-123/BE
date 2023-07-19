@@ -14,7 +14,7 @@ public class TestController {
 
     @PostMapping
     public void test(HttpServletResponse response){
-        Cookie cookie = new Cookie("Authorization", "권조우언 잘생김");
+        Cookie cookie = new Cookie("Authorization", "권조우언잘생김");
         cookie.setPath("/");
         response.addCookie(cookie);
     }
