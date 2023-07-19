@@ -51,10 +51,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException{
         log.info("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
-        List<? extends GrantedAuthority> authorities = new ArrayList<>(((UserDetailsImpl) authResult.getPrincipal()).getAuthorities());
-        UserRoleEnum role = UserRoleEnum.USER;
 
-        String token = jwtUtil.createToken(username, role);
+        String token = jwtUtil.createToken(username, UserRoleEnum.USER);
         jwtUtil.addJwtToCookie(token, response);
         response.setContentType("text/plain;charset=UTF-8");
         response.getWriter().write("로그인에 성공하였습니다.");
