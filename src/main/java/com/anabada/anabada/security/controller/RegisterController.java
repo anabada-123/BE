@@ -17,14 +17,14 @@ public class RegisterController {
 
     private final RegisterService registerService;
 
-    @PostMapping("/api/register/id-check")
+    @PostMapping("/id-check")
     public RegisterResponse userIdCheck(
             @RequestBody IdCheckerRequest request
     ) {
         return registerService.userCheck(request);
     }
 
-    @PostMapping("/api/register/nickname-check")
+    @PostMapping("/nickname-check")
     public RegisterResponse userNicknameCheck(
             @RequestBody NicknameCheckerRequest request
     ) {

@@ -21,11 +21,11 @@ public class RegisterService {
     public RegisterResponse userCheck(IdCheckerRequest request){
         Optional<User> user = repository.findByUserId(request.userid());
 
-        if(!user.isEmpty()){
-            throw new RegisterException(RegisterErrorCode.DUPLICATE_ID);
+        if(user.isEmpty()){
+            return new RegisterResponse("사용 가능한 ID입니다.");
         }
 
-        return new RegisterResponse("사용 가능한 ID입니다.");
+        throw new RegisterException(RegisterErrorCode.DUPLICATE_ID);
     }
 
     public RegisterResponse nicknameCheck(NicknameCheckerRequest request){
