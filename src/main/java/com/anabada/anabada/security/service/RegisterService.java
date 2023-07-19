@@ -2,6 +2,7 @@ package com.anabada.anabada.security.service;
 
 import com.anabada.anabada.global.exception.RegisterException;
 import com.anabada.anabada.global.exception.type.RegisterErrorCode;
+import com.anabada.anabada.security.config.PasswordConfig;
 import com.anabada.anabada.security.model.entity.Email;
 import com.anabada.anabada.security.model.entity.User;
 import com.anabada.anabada.security.model.request.*;
@@ -19,13 +20,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RegisterService {
 
-    private final UserRepository repository;
-    private final EmailUtil emailUtil;
+    private final UserRepository userRepository;
     private final EmailRepository emailRepository;
+    private final EmailUtil emailUtil;
+
+    private final PasswordConfig config;
+
+    private final String userIdSuccessMsg = "";
 
     @Transactional
-    public RegisterResponse userRegister(RegisterRequest request){
+    public RegisterResponse userRegister(RegisterRequest request) {
 
+        if (checkUserName(request.nickname())) {
+            throw new RegisterException(RegisterErrorCode.DUPLICATE_NICKNAME);
+        }
+        if (checkId(request.userid())) {
+            throw new RegisterException(RegisterErrorCode.DUPLICATE_ID);
+        }
+        checkEmailSuccessKey(request.email(), request.successKey());
+
+        userRepository.save(
+                User.builder()
+                        .userId(request.userid())
+                        .userPw(config.passwordEncoder().encode(request.userpw()))
+                        .email(request.email())
+                        .nickname(request.nickname())
+                        .phonenumber(request.phonenumber())
+                        .build()
+        );
 
         return new RegisterResponse("회원가입에 성공하였습니다.");
     }
@@ -54,38 +76,64 @@ public class RegisterService {
     }
 
     @Transactional
-    public RegisterResponse userEmailSendCheck(EmailSendCheckRequest request){
+    public RegisterResponse userEmailSendCheck(EmailSendCheckRequest request) {
 
-        Email email = emailRepository.findByEmail(request.email())
-                .orElseThrow(() -> {throw new RegisterException(RegisterErrorCode.DUPLICATE_ID);});
-
-        if(!email.getSuccessKey().equals(request.successKey())){
-            throw new RegisterException(RegisterErrorCode.EMAIL_SUCCESS_KEY_FAILED);
-        }
+        //Email 확인하기.
+        checkEmailSuccessKey(request.email(), request.successKey());
 
         return new RegisterResponse("이메일 인증을 완료했습니다.");
     }
 
     @Transactional(readOnly = true)
-    public RegisterResponse userCheck(IdCheckerRequest request){
-        Optional<User> user = repository.findByUserId(request.userid());
+    public RegisterResponse userIdCheck(IdCheckerRequest request) {
 
-        if(user.isEmpty()){
-            return new RegisterResponse("사용 가능한 ID입니다.");
+        if (checkId(request.userid())) {
+            throw new RegisterException(RegisterErrorCode.DUPLICATE_ID);
         }
 
-        throw new RegisterException(RegisterErrorCode.DUPLICATE_ID);
+        return new RegisterResponse("사용 가능한 ID입니다.");
     }
 
     @Transactional(readOnly = true)
-    public RegisterResponse nicknameCheck(NicknameCheckerRequest request){
-        Optional<User> user = repository.findByNickname(request.nickname());
+    public RegisterResponse nicknameCheck(NicknameCheckerRequest request) {
 
-        if(user.isEmpty()){
-            return new RegisterResponse("사용 가능한 닉네임입니다.");
+        if (checkUserName(request.nickname())) {
+            throw new RegisterException(RegisterErrorCode.DUPLICATE_NICKNAME);
         }
 
-        throw new RegisterException(RegisterErrorCode.DUPLICATE_NICKNAME);
+        return new RegisterResponse("사용 가능한 닉네임입니다.");
+    }
+
+    private boolean checkId(String userId) {
+        Optional<User> user = userRepository.findByUserId(userId);
+
+        if (user.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkUserName(String nickname) {
+        Optional<User> user = userRepository.findByNickname(nickname);
+
+        if (user.isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void checkEmailSuccessKey(String requestEmail, String successKey) {
+
+        Email email = emailRepository.findByEmail(requestEmail)
+                .orElseThrow(() -> {
+                    throw new RegisterException(RegisterErrorCode.DUPLICATE_ID);
+                });
+
+        if (!email.getSuccessKey().equals(successKey)) {
+            throw new RegisterException(RegisterErrorCode.EMAIL_SUCCESS_KEY_FAILED);
+        }
+
     }
 
 }

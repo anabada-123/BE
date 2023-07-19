@@ -27,7 +27,7 @@ public class RegisterController {
     public RegisterResponse userIdCheck(
             @RequestBody IdCheckerRequest request
     ) {
-        return registerService.userCheck(request);
+        return registerService.userIdCheck(request);
     }
 
     @PostMapping("/nickname-check")
