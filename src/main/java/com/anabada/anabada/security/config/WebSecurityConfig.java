@@ -1,6 +1,6 @@
 package com.anabada.anabada.security.config;
 
-import com.anabada.anabada.security.UserDetailsServiceImpl;
+import com.anabada.anabada.security.model.UserDetailsServiceImpl;
 import com.anabada.anabada.security.filter.JwtAuthenticationFilter;
 import com.anabada.anabada.security.filter.JwtAuthorizationFilter;
 import com.anabada.anabada.security.jwt.JwtUtil;
@@ -52,6 +52,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // CSRF 설정
         http.csrf((csrf) -> csrf.disable());
+
 
         http.sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

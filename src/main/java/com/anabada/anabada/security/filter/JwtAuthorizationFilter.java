@@ -1,6 +1,6 @@
 package com.anabada.anabada.security.filter;
 
-import com.anabada.anabada.security.UserDetailsServiceImpl;
+import com.anabada.anabada.security.model.UserDetailsServiceImpl;
 import com.anabada.anabada.security.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -43,7 +43,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 log.error("Token Error");
                 res.setStatus(400);
                 res.setContentType("text/plain;charset=UTF-8");
-                res.getWriter().write("토큰이 유효하지 않습니다.");
+                res.getWriter().write("토큰이 유효하지 않습니다.");   //프론트에게 물어보기
                 return;
             }
 

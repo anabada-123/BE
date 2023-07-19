@@ -1,12 +1,11 @@
 package com.anabada.anabada.security.filter;
 
-import com.anabada.anabada.security.UserDetailsImpl;
+import com.anabada.anabada.security.model.UserDetailsImpl;
 import com.anabada.anabada.security.jwt.JwtUtil;
 import com.anabada.anabada.security.model.entity.UserRoleEnum;
 import com.anabada.anabada.security.model.request.LoginRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j(topic = "로그인 및 JWT 생성")

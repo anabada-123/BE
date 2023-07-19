@@ -16,4 +16,3 @@ public enum ItemErrorCode {
     private final String errorMsg;
 
 }
-

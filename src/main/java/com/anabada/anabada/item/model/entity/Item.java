@@ -77,5 +77,4 @@ public class Item extends Auditing {
         this.cate = cate;
         this.status = status;
     }
-
 }
