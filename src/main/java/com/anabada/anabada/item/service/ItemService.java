@@ -93,32 +93,34 @@ public class ItemService {
         String name = "test";
 
         List<String> images = item.getImgList();
-        images.add(item.getImg());
         String img = "";
 
-        if(!request.mainImgName().equals(item.getImg())){
-            images.remove(request.mainImgName());
-            item.updateMainImg(request.mainImgName());
-            item.updateImges(images);
-            return;
-        }
-
+        //수정할 이미지가 있을 경우
         if (!Objects.isNull(files)) {
 
             for (MultipartFile file : files) {
-                System.out.println(" : " + file.getOriginalFilename());
-                String fileName = name + System.nanoTime() + getExtension(file);
                 //메인 이미지만 따로 처리 하기 위한 작업.
                 if (file.getOriginalFilename().equals(request.mainImgName())) {
-                    img = fileName;
-                    s3Utill.saveFile(file, fileName);
+                    img = name + System.nanoTime() + getExtension(file);
+                    s3Utill.saveFile(file, img);
                     continue;
                 }
 
+                String fileName = name + System.nanoTime() + getExtension(file);
                 s3Utill.saveFile(file, fileName);
                 images.add(fileName);
             }
 
+        }
+        //수정할 이미지가 없을 경우 순서만 교환 할 경우
+        else{
+            if(!request.mainImgName().equals(item.getImg())){
+                images.add(item.getImg());
+                images.remove(request.mainImgName());
+                item.updateMainImg(request.mainImgName());
+                item.updateImges(images);
+                return;
+            }
         }
 
         //이미지 수정 쿼리 더티 체킹
