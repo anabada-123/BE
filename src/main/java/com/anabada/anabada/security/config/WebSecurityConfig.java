@@ -53,6 +53,8 @@ public class WebSecurityConfig {
         // CSRF 설정
         http.csrf((csrf) -> csrf.disable());
 
+        http.cors((cors) -> cors.disable());
+
         http.sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
