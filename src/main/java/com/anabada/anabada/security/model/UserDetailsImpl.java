@@ -1,7 +1,7 @@
 package com.anabada.anabada.security.model;
 
 import com.anabada.anabada.security.model.entity.User;
-import com.anabada.anabada.security.model.entity.UserRoleEnum;
+import com.anabada.anabada.security.model.entity.type.UserRoleEnum;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

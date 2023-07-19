@@ -1,7 +1,6 @@
 package com.anabada.anabada.security.controller;
 
-import com.anabada.anabada.security.model.request.IdCheckerRequest;
-import com.anabada.anabada.security.model.request.NicknameCheckerRequest;
+import com.anabada.anabada.security.model.request.*;
 import com.anabada.anabada.security.model.response.RegisterResponse;
 import com.anabada.anabada.security.service.RegisterService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +16,13 @@ public class RegisterController {
 
     private final RegisterService registerService;
 
+    @PostMapping()
+    public RegisterResponse register(
+            @RequestBody RegisterRequest request
+    ) {
+        return registerService.userRegister(request);
+    }
+
     @PostMapping("/id-check")
     public RegisterResponse userIdCheck(
             @RequestBody IdCheckerRequest request
@@ -31,7 +37,17 @@ public class RegisterController {
         return registerService.nicknameCheck(request);
     }
 
+    @PostMapping("/email-send")
+    public RegisterResponse userEmailSend(
+            @RequestBody EmailSendRequest request
+    ) {
+        return registerService.userEmailSend(request);
+    }
 
-
-
+    @PostMapping("/email-check")
+    public RegisterResponse userEmailSendCheck(
+            @RequestBody EmailSendCheckRequest request
+    ) {
+        return registerService.userEmailSendCheck(request);
+    }
 }
