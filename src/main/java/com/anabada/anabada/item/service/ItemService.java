@@ -100,14 +100,8 @@ public class ItemService {
 
             for (MultipartFile file : files) {
 
-                //메인 이미지만 따로 처리 하기 위한 작업.
-                if (file.getOriginalFilename().equals(request.mainImgName())) {
-                    img = name + System.nanoTime() + getExtension(file);
-//                    images.add(img); //메인 이미지 내려가야 되기 때문.
-                    s3Utill.saveFile(file, img);
-                    continue;
-                }
-
+                System.out.println("파일 이름 : "+file.getOriginalFilename());
+                System.out.println("파일 이름 : "+request.mainImgName());
                 String fileName = name + System.nanoTime() + getExtension(file);
                 s3Utill.saveFile(file, fileName);
                 images.add(fileName);
