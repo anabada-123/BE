@@ -131,6 +131,15 @@ public class ItemService {
             images.remove(request.mainImgName());
             item.updateMainImg(request.mainImgName());
             item.updateImges(images);
+            item.updateItemAll(
+                    request.itemName(),
+                    request.itemContent(),
+                    request.itemOneContent(),
+                    request.tradingPosition(),
+                    request.tradingItem(),
+                    getCate(request.cate()),
+                    getStatus(request.status())
+            );
         }
 
 
