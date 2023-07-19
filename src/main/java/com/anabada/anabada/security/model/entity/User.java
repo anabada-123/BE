@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Table(name = "user")
 public class User extends Auditing {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,11 +34,4 @@ public class User extends Auditing {
     @Column(nullable = false, unique = true)
     private String phonenumber;
 
-    public User(String nickname, String userId, String userPw, String email, String phonenumber) {
-        this.nickname = nickname;
-        this.userId = userId;
-        this.userPw = userPw;
-        this.email = email;
-        this.phonenumber = phonenumber;
-    }
 }

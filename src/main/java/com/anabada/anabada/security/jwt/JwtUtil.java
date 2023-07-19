@@ -1,6 +1,6 @@
 package com.anabada.anabada.security.jwt;
 
-import com.anabada.anabada.security.model.entity.UserRoleEnum;
+import com.anabada.anabada.security.model.entity.type.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

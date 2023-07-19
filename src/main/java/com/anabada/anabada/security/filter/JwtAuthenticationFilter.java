@@ -2,7 +2,7 @@ package com.anabada.anabada.security.filter;
 
 import com.anabada.anabada.security.model.UserDetailsImpl;
 import com.anabada.anabada.security.jwt.JwtUtil;
-import com.anabada.anabada.security.model.entity.UserRoleEnum;
+import com.anabada.anabada.security.model.entity.type.UserRoleEnum;
 import com.anabada.anabada.security.model.request.LoginRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

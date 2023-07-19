@@ -1,4 +1,4 @@
-package com.anabada.anabada.security.model.entity;
+package com.anabada.anabada.security.model.entity.type;
 
 public enum UserRoleEnum {
     USER(Authority.USER),

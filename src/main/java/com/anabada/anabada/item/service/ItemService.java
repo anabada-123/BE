@@ -62,7 +62,6 @@ public class ItemService {
                 () -> new ItemException(ItemErrorCode.ITEM_NULL));
 
         ItemFindResponse itemFindResponse = new ItemFindResponse(item);
-        itemFindResponse.getImgList().add(itemFindResponse.getImg());
         return itemFindResponse;
     }
 
@@ -76,7 +75,7 @@ public class ItemService {
         for (String s : item.getImgList()) {
             s3Utill.deleteImage(s);
         }
-        s3Utill.deleteImage(item.getTradingItem());
+        s3Utill.deleteImage(item.getImg());
 
         return id;
     }
@@ -93,72 +92,56 @@ public class ItemService {
         //TODO: 로그인 기능 도입시 수정.
         String name = "test";
 
-        List<String> imgList = new ArrayList<>();
-
+        List<String> images = item.getImgList();
         String img = "";
-
-        System.out.println(request.mainImgName());
-        System.out.println(request.imgNameList());
-        System.out.println(files.get(0).getOriginalFilename());
-
-        for (String itemimg : item.getImgList()) {
-
-            boolean check = true;
-
-            for (String inputImgName : request.imgNameList()) {
-
-                if (itemimg.equals(inputImgName)) {
-                    check = false;
-                }
-
-            }
-
-            //mainImg 체크
-            if (itemimg.equals(request.mainImgName())) {
-                img = itemimg;
-            }
-
-            //해당 경로의 사진을 다시 업데이트할때 안올리게 된다면.
-            if (check) {
-                s3Utill.deleteImage(itemimg);
-                continue;
-            }
-
-            imgList.add(itemimg);
-
-        }
-
+        //데이터가 기존1, 기존2, 새로운1, 새로운 1 들어오면,
+        //수정할 이미지가 있을 경우
         if (!Objects.isNull(files)) {
-
+            images = request.imgNameList();
             for (MultipartFile file : files) {
+                String fileName = name + System.nanoTime() + getExtension(file);
 
-                //메인 이미지만 따로 처리 하기 위한 작업.
-                if (file.getOriginalFilename().equals(request.mainImgName())) {
-                    img = name + System.nanoTime() + getExtension(file);
-                    s3Utill.saveFile(file, img);
-                    imgList.add(request.mainImgName());
+                if (request.mainImgName().equals(file.getOriginalFilename())) {
+                    img = fileName;
+                    s3Utill.saveFile(file, fileName);
                     continue;
                 }
-
-                String fileName = name + System.nanoTime() + getExtension(file);
                 s3Utill.saveFile(file, fileName);
-                imgList.add(fileName);
+                images.add(fileName);
             }
 
+
+            //이미지 수정 쿼리 더티 체킹
+            item.updateImges(images);
+            item.updateMainImg(img);
+            item.updateItemAll(
+                    request.itemName(),
+                    request.itemContent(),
+                    request.itemOneContent(),
+                    request.tradingPosition(),
+                    request.tradingItem(),
+                    getCate(request.cate()),
+                    getStatus(request.status())
+            );
+            return;
+        }
+        //수정할 이미지가 없을 경우 순서만 교환 할 경우
+        if (!request.mainImgName().equals(item.getImg())) {
+            images.add(item.getImg());
+            images.remove(request.mainImgName());
+            item.updateMainImg(request.mainImgName());
+            item.updateImges(images);
+            item.updateItemAll(
+                    request.itemName(),
+                    request.itemContent(),
+                    request.itemOneContent(),
+                    request.tradingPosition(),
+                    request.tradingItem(),
+                    getCate(request.cate()),
+                    getStatus(request.status())
+            );
         }
 
-        //이미지 수정 쿼리 더티 체킹
-        item.updateImges(imgList);
-        item.updateMainImg(img);
-        item.updateItemAll(
-                request.itemName(),
-                request.itemContent(),
-                request.itemOneContent(),
-                request.tradingPosition(),
-                request.tradingItem(),
-                getCate(request.cate()),
-                getStatus(request.status())
-        );
 
     }
 
@@ -172,7 +155,7 @@ public class ItemService {
 
         List<String> images = new ArrayList<>();
         for (MultipartFile file : files) {
-            System.out.println(" : "+file.getOriginalFilename());
+            System.out.println(" : " + file.getOriginalFilename());
             //메인 이미지만 따로 처리 하기 위한 작업.
             if (file.getOriginalFilename().equals(request.mainImgName())) {
                 img = name + System.nanoTime() + getExtension(file);
