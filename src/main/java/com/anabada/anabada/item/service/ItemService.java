@@ -94,43 +94,45 @@ public class ItemService {
 
         List<String> images = item.getImgList();
         String img = "";
-
+        //데이터가 기존1, 기존2, 새로운1, 새로운 1 들어오면,
         //수정할 이미지가 있을 경우
         if (!Objects.isNull(files)) {
-
+            images = request.imgNameList();
             for (MultipartFile file : files) {
-
-                System.out.println("파일 이름 : "+file.getOriginalFilename());
-                System.out.println("파일 이름 : "+request.mainImgName());
                 String fileName = name + System.nanoTime() + getExtension(file);
+
+                if (request.mainImgName().equals(file.getOriginalFilename())) {
+                    img = fileName;
+                    s3Utill.saveFile(file, fileName);
+                    continue;
+                }
                 s3Utill.saveFile(file, fileName);
                 images.add(fileName);
             }
 
+
+            //이미지 수정 쿼리 더티 체킹
+            item.updateImges(images);
+            item.updateMainImg(img);
+            item.updateItemAll(
+                    request.itemName(),
+                    request.itemContent(),
+                    request.itemOneContent(),
+                    request.tradingPosition(),
+                    request.tradingItem(),
+                    getCate(request.cate()),
+                    getStatus(request.status())
+            );
+            return;
         }
         //수정할 이미지가 없을 경우 순서만 교환 할 경우
-        else{
-            if(!request.mainImgName().equals(item.getImg())){
-                images.add(item.getImg());
-                images.remove(request.mainImgName());
-                item.updateMainImg(request.mainImgName());
-                item.updateImges(images);
-                return;
-            }
+        if (!request.mainImgName().equals(item.getImg())) {
+            images.add(item.getImg());
+            images.remove(request.mainImgName());
+            item.updateMainImg(request.mainImgName());
+            item.updateImges(images);
         }
 
-        //이미지 수정 쿼리 더티 체킹
-        item.updateImges(images);
-        item.updateMainImg(img);
-        item.updateItemAll(
-                request.itemName(),
-                request.itemContent(),
-                request.itemOneContent(),
-                request.tradingPosition(),
-                request.tradingItem(),
-                getCate(request.cate()),
-                getStatus(request.status())
-        );
 
     }
 
