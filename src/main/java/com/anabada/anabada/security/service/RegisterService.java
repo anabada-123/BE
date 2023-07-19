@@ -31,11 +31,11 @@ public class RegisterService {
     public RegisterResponse nicknameCheck(NicknameCheckerRequest request){
         Optional<User> user = repository.findByNickname(request.nickname());
 
-        if(!user.isEmpty()){
-            throw new RegisterException(RegisterErrorCode.DUPLICATE_NICKNAME);
+        if(user.isEmpty()){
+            return new RegisterResponse("사용 가능한 닉네임입니다.");
         }
 
-        return new RegisterResponse("사용 가능한 닉네임입니다.");
+        throw new RegisterException(RegisterErrorCode.DUPLICATE_NICKNAME);
     }
 
 }
