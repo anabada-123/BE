@@ -26,7 +26,6 @@ public class RegisterService {
 
     private final PasswordConfig config;
 
-    private final String userIdSuccessMsg = "";
 
     @Transactional
     public RegisterResponse userRegister(RegisterRequest request) {
