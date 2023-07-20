@@ -2,7 +2,6 @@ package com.anabada.anabada.security.service;
 
 import com.anabada.anabada.global.exception.RegisterException;
 import com.anabada.anabada.global.exception.type.RegisterErrorCode;
-import com.anabada.anabada.security.config.PasswordConfig;
 import com.anabada.anabada.security.model.entity.Email;
 import com.anabada.anabada.security.model.entity.User;
 import com.anabada.anabada.security.model.request.*;
