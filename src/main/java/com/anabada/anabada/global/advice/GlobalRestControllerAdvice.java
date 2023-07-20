@@ -2,6 +2,7 @@ package com.anabada.anabada.global.advice;
 
 import com.anabada.anabada.global.exception.FileException;
 import com.anabada.anabada.global.exception.ItemException;
+import com.anabada.anabada.global.exception.LoginException;
 import com.anabada.anabada.global.exception.RegisterException;
 import com.anabada.anabada.global.model.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,14 @@ public class GlobalRestControllerAdvice {
                 .status(e.getErrorCode().getStatus())
                 .body(new ErrorResponse((e.getErrorCode().getErrorMsg())));
     }
+
+    @ExceptionHandler(LoginException.class)
+    public ResponseEntity<?> loginExceptionHandler(LoginException e){
+        return ResponseEntity
+                .status(e.getErrorCode().getStatus())
+                .body(new ErrorResponse((e.getErrorCode().getErrorMsg())));
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> vaildationHandler(MethodArgumentNotValidException e){

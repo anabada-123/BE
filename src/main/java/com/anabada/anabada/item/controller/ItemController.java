@@ -49,24 +49,21 @@ public class ItemController {
 
     //TODO: 로그인 기능 추가시 아이디 넣어야함.
     @PostMapping
-    public String itemSave(
+    public void itemSave(
             @RequestPart(value = "item", required = false) @Valid ItemCreateRequest request,
             @RequestPart(value = "img") List<MultipartFile> files
     ) {
         itemService.itemSave(files, request);
-        return "저장 성공!";
     }
 
 
     @PutMapping("/{id}")
-    public String itemUpdate(
+    public void itemUpdate(
             @RequestPart(value = "item", required = false) @Valid ItemUpdateRequest request,
             @RequestPart(value = "img", required = false) List<MultipartFile> files,
             @PathVariable("id") Long itemId
     ) {
-
         itemService.itemUpdate(itemId, files, request);
-        return "수정 성공!";
     }
 
 
