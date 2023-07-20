@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LoginService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public void login(LoginRequestDto dto) {
         User user = userRepository.findByUserId(dto.getUserid())
