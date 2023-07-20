@@ -28,9 +28,8 @@ public class ItemController {
     public PageResponseDto getItem(
             @RequestParam("page") int page)
     {
-               //100개 -> 10개
         return itemService.getItem(page-1, 10);
-    }          //1 2 3 4 5 -> 몇번째 페이지까지 있는지.
+    }
 
 
     //선택한 상품 조회

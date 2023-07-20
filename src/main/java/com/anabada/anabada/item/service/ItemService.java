@@ -37,8 +37,6 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final S3Utill s3Utill;
 
-    private String DEFAULT_IMG = "defulat\\기본이미지.png";
-
     //상품 전체 조회
     @Transactional(readOnly = true)
     public PageResponseDto getItem(int page, int size) {
@@ -94,6 +92,7 @@ public class ItemService {
 
         List<String> images = item.getImgList();
         String img = "";
+
         //데이터가 기존1, 기존2, 새로운1, 새로운 1 들어오면,
         //수정할 이미지가 있을 경우
         if (!Objects.isNull(files)) {
