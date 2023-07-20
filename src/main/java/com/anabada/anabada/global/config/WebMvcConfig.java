@@ -10,10 +10,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("*")
+                .allowedOrigins("https://fe-anabadastore.vercel.app")
                 .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("*")
                 .allowCredentials(true).maxAge(3600);
     }
 

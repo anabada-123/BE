@@ -36,7 +36,9 @@ public class RegisterService {
         if (checkId(request.userid())) {
             throw new RegisterException(RegisterErrorCode.DUPLICATE_ID);
         }
-        checkEmailSuccessKey(request.email(), request.successKey());
+        long emailId = checkEmailSuccessKey(request.email(), request.successKey());
+
+        emailRepository.deleteById(emailId);
 
         userRepository.save(
                 User.builder()
@@ -122,7 +124,7 @@ public class RegisterService {
         return true;
     }
 
-    private void checkEmailSuccessKey(String requestEmail, String successKey) {
+    private long checkEmailSuccessKey(String requestEmail, String successKey) {
 
         Email email = emailRepository.findByEmail(requestEmail)
                 .orElseThrow(() -> {
@@ -133,6 +135,7 @@ public class RegisterService {
             throw new RegisterException(RegisterErrorCode.EMAIL_SUCCESS_KEY_FAILED);
         }
 
+        return email.getId();
     }
 
 }
