@@ -23,8 +23,6 @@ public class RegisterService {
     private final EmailRepository emailRepository;
     private final EmailUtil emailUtil;
 
-    private final PasswordConfig config;
-
 
     @Transactional
     public RegisterResponse userRegister(RegisterRequest request) {
@@ -42,7 +40,7 @@ public class RegisterService {
         userRepository.save(
                 User.builder()
                         .userId(request.userid())
-                        .userPw(config.passwordEncoder().encode(request.userpw()))
+                        .userPw(request.userpw())
                         .email(request.email())
                         .nickname(request.nickname())
                         .phonenumber(request.phonenumber())
